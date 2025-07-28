@@ -102,6 +102,7 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
             name='MA(20)',
             line=dict(color='#FF9800', width=2),
             opacity=0.8,
+            hoverinfo='x+y',
             hovertemplate='<b>%{x|%Y-%m-%d}</b><br>' +
                          'MA(20): %{y:,.0f}<extra></extra>'
         ), row=1, col=1
@@ -116,6 +117,7 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
             name='MA(50)',
             line=dict(color='#2196F3', width=2),
             opacity=0.8,
+            hoverinfo='x+y',
             hovertemplate='<b>%{x|%Y-%m-%d}</b><br>' +
                          'MA(50): %{y:,.0f}<extra></extra>'
         ), row=1, col=1
@@ -131,6 +133,7 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
             marker_color=colors,
             name='Volume',
             opacity=0.6,
+            hoverinfo='x+y',
             hovertemplate='<b>%{x|%Y-%m-%d}</b><br>' +
                          'Volume: %{y:.2f}M<extra></extra>'
         ), row=2, col=1
@@ -193,8 +196,8 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
         ticksuffix='M'
     )
 
-    # Chỉ cập nhật hoverinfo cho Scatter và Bar (Volume), không cho Candlestick
-    fig.update_traces(hoverinfo='x+y', selector=lambda t: isinstance(t, (go.Scatter, go.Bar)))
+    # Bỏ hoàn toàn fig.update_traces để tránh xung đột với Candlestick
+    # Mỗi trace sẽ tự quản lý hover của mình
     
     # Force hide all vertical grids - cách mạnh hơn
     for axis in fig.layout:
