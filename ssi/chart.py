@@ -80,12 +80,7 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
             name='OHLC',
             opacity=0.8,
             increasing_line_color='#26A69A',
-            decreasing_line_color='#EF5350',
-            hovertemplate='<b>%{x|%Y-%m-%d}</b><br>' +
-                         'Open: %{open:,.0f}<br>' +
-                         'High: %{high:,.0f}<br>' +
-                         'Low: %{low:,.0f}<br>' +
-                         'Close: %{close:,.0f}<extra></extra>'
+            decreasing_line_color='#EF5350'
         ), row=1, col=1
     )
     
