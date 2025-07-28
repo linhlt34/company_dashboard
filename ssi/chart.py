@@ -69,13 +69,6 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
         subplot_titles=[f"{symbol} Price Chart", "Volume"]
     )
 
-    # Tạo hover text thủ công cho candlestick
-    hover_text = [
-        f"<b>{d.strftime('%Y-%m-%d')}</b><br>"
-        f"Open: {o:,.0f}<br>High: {h:,.0f}<br>Low: {l:,.0f}<br>Close: {c:,.0f}"
-        for d, o, h, l, c in zip(df_temp['tradingDate'], df_temp['open'], df_temp['high'], df_temp['low'], df_temp['close'])
-    ]
-
     # Candlestick chart
     fig.add_trace(
         go.Candlestick(
@@ -88,8 +81,11 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
             opacity=0.8,
             increasing_line_color='#26A69A',
             decreasing_line_color='#EF5350',
-            hoverinfo='text',
-            hovertext=hover_text
+            hovertemplate='<b>%{x|%Y-%m-%d}</b><br>' +
+                         'Open: %{open:,.0f}<br>' +
+                         'High: %{high:,.0f}<br>' +
+                         'Low: %{low:,.0f}<br>' +
+                         'Close: %{close:,.0f}<extra></extra>'
         ), row=1, col=1
     )
     
@@ -102,9 +98,8 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
             name='MA(20)',
             line=dict(color='#FF9800', width=2),
             opacity=0.8,
-            hoverinfo='text',
-            hovertext=[f"<b>{d.strftime('%Y-%m-%d')}</b><br>MA(20): {y:,.0f}" 
-                      for d, y in zip(df_temp['tradingDate'], df_temp['MA20'])]
+            hovertemplate='<b>%{x|%Y-%m-%d}</b><br>' +
+                         'MA(20): %{y:,.0f}<extra></extra>'
         ), row=1, col=1
     )
     
@@ -117,9 +112,8 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
             name='MA(50)',
             line=dict(color='#2196F3', width=2),
             opacity=0.8,
-            hoverinfo='text',
-            hovertext=[f"<b>{d.strftime('%Y-%m-%d')}</b><br>MA(50): {y:,.0f}" 
-                      for d, y in zip(df_temp['tradingDate'], df_temp['MA50'])]
+            hovertemplate='<b>%{x|%Y-%m-%d}</b><br>' +
+                         'MA(50): %{y:,.0f}<extra></extra>'
         ), row=1, col=1
     )
     
@@ -133,9 +127,8 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
             marker_color=colors,
             name='Volume',
             opacity=0.6,
-            hoverinfo='text',
-            hovertext=[f"<b>{d.strftime('%Y-%m-%d')}</b><br>Volume: {v:.2f}M" 
-                      for d, v in zip(df_temp['tradingDate'], volume_m)]
+            hovertemplate='<b>%{x|%Y-%m-%d}</b><br>' +
+                         'Volume: %{y:.2f}M<extra></extra>'
         ), row=2, col=1
     )
     
@@ -152,7 +145,7 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
         autosize=True,
         height=600,
         showlegend=True,
-        # hovermode='x unified',  # ❌ bỏ dòng này đi để tránh xung đột
+        hovermode='x unified',
         legend=dict(
             orientation="h",
             x=1,
@@ -165,7 +158,6 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
         margin=dict(l=50, r=50, t=80, b=50),
         plot_bgcolor='white',
         paper_bgcolor='white'
-        # hovermode='x unified',  # ❌ bỏ dòng này đi để tránh xung đột
     )
     
     # X-Axis for both rows (hide vertical grid, show date format) - cách mạnh hơn
@@ -196,33 +188,13 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
         ticksuffix='M'
     )
 
-    # Bỏ hoàn toàn fig.update_traces để tránh xung đột với Candlestick
-    # Mỗi trace sẽ tự quản lý hover của mình
+    # Enable crosshair for all traces
+    fig.update_traces(hoverinfo='x+y')
     
     # Force hide all vertical grids - cách mạnh hơn
     for axis in fig.layout:
         if axis.startswith("xaxis"):
             fig.layout[axis].update(showgrid=False)
-    
-    # Giải pháp mạnh cuối cùng: dùng fig.layout.update(...)
-    fig.layout.update({
-        'xaxis': dict(
-            showgrid=False,
-            tickformat='%b %Y',
-            tickangle=0,
-            tickfont=dict(size=10)
-        ),
-        'xaxis2': dict(
-            showgrid=False,
-            tickformat='%b %Y',
-            tickangle=0,
-            tickfont=dict(size=10)
-        )
-    })
-    
-    # Debug: kiểm tra layout config
-    print("Final layout config:")
-    print(fig.layout.to_plotly_json())
 
     return fig
 
