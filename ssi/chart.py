@@ -139,9 +139,6 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
             xanchor='center',
             font=dict(size=20, color='#2E3440')
         ),
-        xaxis_title=None,
-        yaxis_title="Price (VND)",
-        yaxis2_title="Volume",
         xaxis_rangeslider_visible=False,
         autosize=True,
         height=600,
@@ -150,9 +147,9 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
         legend=dict(
             orientation="h",
             x=1,
-            y=1,
-            xanchor="right",
-            yanchor="top",  # Đè lên biểu đồ
+            y=1.05,  # Tăng y để đè lên biểu đồ
+            xanchor="center",  # Căn giữa
+            yanchor="top",
             bgcolor='rgba(255,255,255,0)',
             borderwidth=0
         ),
@@ -183,7 +180,7 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
     fig.update_yaxes(
         row=1, col=1,
         showgrid=True,
-        gridcolor='rgba(0,0,0,0.02)',
+        gridcolor='rgba(0,0,0,0.01)',  # Nhẹ hơn
         zeroline=False,
         tickformat=',.0f'
     )
@@ -197,6 +194,9 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
         tickformat='.2f',
         ticksuffix='M'
     )
+
+    # Enable crosshair for all traces
+    fig.update_traces(hoverinfo='x+y')
 
     return fig
 
