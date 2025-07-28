@@ -149,7 +149,7 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
         autosize=True,
         height=600,
         showlegend=True,
-        hovermode='x unified',
+        # hovermode='x unified',  # ❌ bỏ dòng này đi để tránh xung đột
         legend=dict(
             orientation="h",
             x=1,
@@ -162,6 +162,7 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
         margin=dict(l=50, r=50, t=80, b=50),
         plot_bgcolor='white',
         paper_bgcolor='white'
+        # hovermode='x unified',  # ❌ bỏ dòng này đi để tránh xung đột
     )
     
     # X-Axis for both rows (hide vertical grid, show date format) - cách mạnh hơn
@@ -193,9 +194,7 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
     )
 
     # Chỉ cập nhật hoverinfo cho Scatter và Bar (Volume), không cho Candlestick
-    for trace in fig.data:
-        if isinstance(trace, (go.Scatter, go.Bar)):
-            trace.update(hoverinfo='x+y')
+    fig.update_traces(hoverinfo='x+y', selector=lambda t: isinstance(t, (go.Scatter, go.Bar)))
     
     # Force hide all vertical grids - cách mạnh hơn
     for axis in fig.layout:
