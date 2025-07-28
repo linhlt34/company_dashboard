@@ -55,8 +55,8 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
     # Calculate moving averages
     df_temp = calculate_moving_averages(df_temp)
     
-    # Format dates for display
-    df_temp['tradingDate'] = df_temp['tradingDate'].dt.strftime('%Y-%m-%d')
+    # Keep dates as datetime for proper date axis
+    # df_temp['tradingDate'] remains as datetime
     
     # Create subplot with price and volume
     fig = make_subplots(
@@ -79,7 +79,7 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
             opacity=0.8,
             increasing_line_color='#26A69A',
             decreasing_line_color='#EF5350',
-            hovertemplate='<b>%{x}</b><br>' +
+            hovertemplate='<b>%{x|%Y-%m-%d}</b><br>' +
                          'Open: %{open:,.0f}<br>' +
                          'High: %{high:,.0f}<br>' +
                          'Low: %{low:,.0f}<br>' +
@@ -96,7 +96,7 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
             name='MA(20)',
             line=dict(color='#FF9800', width=2),
             opacity=0.8,
-            hovertemplate='<b>%{x}</b><br>' +
+            hovertemplate='<b>%{x|%Y-%m-%d}</b><br>' +
                          'MA(20): %{y:,.0f}<extra></extra>'
         ), row=1, col=1
     )
@@ -110,7 +110,7 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
             name='MA(50)',
             line=dict(color='#2196F3', width=2),
             opacity=0.8,
-            hovertemplate='<b>%{x}</b><br>' +
+            hovertemplate='<b>%{x|%Y-%m-%d}</b><br>' +
                          'MA(50): %{y:,.0f}<extra></extra>'
         ), row=1, col=1
     )
@@ -125,7 +125,7 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
             marker_color=colors,
             name='Volume',
             opacity=0.6,
-            hovertemplate='<b>%{x}</b><br>' +
+            hovertemplate='<b>%{x|%Y-%m-%d}</b><br>' +
                          'Volume: %{y:.2f}M<extra></extra>'
         ), row=2, col=1
     )
@@ -162,19 +162,21 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
         paper_bgcolor='white'
     )
     
-    # Update axes with lighter grid
+    # Update axes with improved styling
     fig.update_xaxes(
-        showgrid=True,
-        gridwidth=1,
-        gridcolor='rgba(0,0,0,0.05)',  # Lighter grid
-        type='category',
-        tickangle=45
+        type='date',
+        tickformat='%b %Y',  # ví dụ: Jul 2025
+        tickfont=dict(size=10),
+        ticks="outside",
+        tickcolor='rgba(0,0,0,0.1)',
+        showgrid=False,  # Ẩn grid dọc
+        tickangle=0
     )
     
     fig.update_yaxes(
         showgrid=True,
         gridwidth=1,
-        gridcolor='rgba(0,0,0,0.05)',  # Lighter grid
+        gridcolor='rgba(0,0,0,0.01)',  # Rất nhẹ grid ngang
         zeroline=False,
         tickformat=',.0f'  # Không hiển thị phần thập phân
     )
@@ -183,7 +185,7 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
     fig.update_yaxes(
         showgrid=True,
         gridwidth=1,
-        gridcolor='rgba(0,0,0,0.05)',  # Lighter grid
+        gridcolor='rgba(0,0,0,0.03)',  # Nhẹ hơn cho volume
         zeroline=False,
         row=2, col=1,
         tickformat='.2f',
