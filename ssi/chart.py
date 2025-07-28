@@ -55,8 +55,10 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
     # Calculate moving averages
     df_temp = calculate_moving_averages(df_temp)
     
-    # Ensure datetime type for time axis
-    df_temp['tradingDate'] = pd.to_datetime(df_temp['tradingDate'])
+    # Ensure datetime type for time axis - ép kiểu rõ ràng
+    df_temp['tradingDate'] = pd.to_datetime(df_temp['tradingDate'], errors='coerce')
+    # Remove any invalid dates
+    df_temp = df_temp.dropna(subset=['tradingDate'])
     
     # Create subplot with price and volume
     fig = make_subplots(
@@ -158,17 +160,8 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
         paper_bgcolor='white'
     )
     
-    # X-Axis for both rows (hide vertical grid, show date format)
+    # X-Axis for both rows (hide vertical grid, show date format) - cách mạnh hơn
     fig.update_xaxes(
-        row=1, col=1,
-        showgrid=False,
-        type='date',
-        tickformat='%b %Y',
-        tickangle=0,
-        tickfont=dict(size=10)
-    )
-    fig.update_xaxes(
-        row=2, col=1,
         showgrid=False,
         type='date',
         tickformat='%b %Y',
@@ -189,7 +182,7 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
     fig.update_yaxes(
         row=2, col=1,
         showgrid=True,
-        gridcolor='rgba(0,0,0,0.03)',
+        gridcolor='rgba(0,0,0,0.01)',  # Nhẹ hơn cho volume
         zeroline=False,
         tickformat='.2f',
         ticksuffix='M'
@@ -197,6 +190,11 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
 
     # Enable crosshair for all traces
     fig.update_traces(hoverinfo='x+y')
+    
+    # Force hide all vertical grids - cách mạnh hơn
+    for axis in fig.layout:
+        if axis.startswith("xaxis"):
+            fig.layout[axis].update(showgrid=False)
 
     return fig
 
