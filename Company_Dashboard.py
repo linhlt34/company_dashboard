@@ -257,7 +257,7 @@ fig_MARGIN = create_margin_plots(df, selected_ticker)
 fig_BANK_SUPPLEMENT = create_bank_plots(bank, selected_ticker)
 
 # Plot OHLCV data
-from SSI_API import load_ticker_price
+from ssi import load_ticker_price
 ytd = datetime(datetime.today().year, 1, 1)
 
 with st.expander("Price Chart", expanded=True):
