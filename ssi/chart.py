@@ -55,8 +55,8 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
     # Calculate moving averages
     df_temp = calculate_moving_averages(df_temp)
     
-    # Keep dates as datetime for proper date axis
-    # df_temp['tradingDate'] remains as datetime
+    # Ensure datetime type for time axis
+    df_temp['tradingDate'] = pd.to_datetime(df_temp['tradingDate'])
     
     # Create subplot with price and volume
     fig = make_subplots(
@@ -133,28 +133,27 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
     # Update layout for better appearance
     fig.update_layout(
         template='plotly_white',
-        title={
-            'text': f"{symbol} Price Chart",
-            'x': 0.5,
-            'xanchor': 'center',
-            'font': {'size': 20, 'color': '#2E3440'}
-        },
-        xaxis2_title="Date",
+        title=dict(
+            text=f"{symbol} Price Chart",
+            x=0.5,
+            xanchor='center',
+            font=dict(size=20, color='#2E3440')
+        ),
+        xaxis_title=None,
         yaxis_title="Price (VND)",
         yaxis2_title="Volume",
-        xaxis_rangeslider_visible=False,  
-        xaxis2_rangeslider_visible=False,
+        xaxis_rangeslider_visible=False,
         autosize=True,
         height=600,
         showlegend=True,
-        hovermode='x unified',  # Bật crosshair
+        hovermode='x unified',
         legend=dict(
             orientation="h",
             x=1,
-            y=1.05,
+            y=1,
             xanchor="right",
-            yanchor="bottom",
-            bgcolor='rgba(255,255,255,0)',  # không cần nền
+            yanchor="top",  # Đè lên biểu đồ
+            bgcolor='rgba(255,255,255,0)',
             borderwidth=0
         ),
         margin=dict(l=50, r=50, t=80, b=50),
@@ -162,34 +161,40 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
         paper_bgcolor='white'
     )
     
-    # Update axes with improved styling
+    # X-Axis for both rows (hide vertical grid, show date format)
     fig.update_xaxes(
+        row=1, col=1,
+        showgrid=False,
         type='date',
-        tickformat='%b %Y',  # ví dụ: Jul 2025
-        tickfont=dict(size=10),
-        ticks="outside",
-        tickcolor='rgba(0,0,0,0.1)',
-        showgrid=False,  # Ẩn grid dọc
-        tickangle=0
+        tickformat='%b %Y',
+        tickangle=0,
+        tickfont=dict(size=10)
     )
-    
-    fig.update_yaxes(
-        showgrid=True,
-        gridwidth=1,
-        gridcolor='rgba(0,0,0,0.01)',  # Rất nhẹ grid ngang
-        zeroline=False,
-        tickformat=',.0f'  # Không hiển thị phần thập phân
-    )
-    
-    # Update y-axis for volume
-    fig.update_yaxes(
-        showgrid=True,
-        gridwidth=1,
-        gridcolor='rgba(0,0,0,0.03)',  # Nhẹ hơn cho volume
-        zeroline=False,
+    fig.update_xaxes(
         row=2, col=1,
+        showgrid=False,
+        type='date',
+        tickformat='%b %Y',
+        tickangle=0,
+        tickfont=dict(size=10)
+    )
+
+    # Y-Axis Price
+    fig.update_yaxes(
+        row=1, col=1,
+        showgrid=True,
+        gridcolor='rgba(0,0,0,0.02)',
+        zeroline=False,
+        tickformat=',.0f'
+    )
+
+    # Y-Axis Volume
+    fig.update_yaxes(
+        row=2, col=1,
+        showgrid=True,
+        gridcolor='rgba(0,0,0,0.03)',
+        zeroline=False,
         tickformat='.2f',
-        tickprefix='',
         ticksuffix='M'
     )
 

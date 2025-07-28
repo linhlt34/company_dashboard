@@ -3,17 +3,17 @@
 ## ✅ **Đã Hoàn Thành Tất Cả Cải Tiến**
 
 ### 🎨 **Visual Enhancements**
-- **Smart Grid**: Chỉ giữ grid ngang (Y-axis), ẩn grid dọc (X-axis)
-- **Ultra Light Grid**: `rgba(0,0,0,0.01)` cho price, `rgba(0,0,0,0.03)` cho volume
+- **Smart Grid**: Chỉ giữ grid ngang (Y-axis), ẩn grid dọc (X-axis) - **ĐÃ SỬA**
+- **Ultra Light Grid**: `rgba(0,0,0,0.02)` cho price, `rgba(0,0,0,0.03)` cho volume
 - **Crosshair**: `hovermode='x unified'` - Đường ngang dọc khi hover
-- **Legend đè lên biểu đồ**: Giống FireAnt, không có nền
+- **Legend đè lên biểu đồ**: `yanchor="top"` - **ĐÃ SỬA**
 - **Responsive Size**: `autosize=True` - Tự động điều chỉnh kích thước
 
 ### 📅 **Date Axis Improvements**
-- **Type**: `type='date'` thay vì `category`
-- **Format**: `tickformat='%b %Y'` (ví dụ: Jul 2025)
-- **Spacing**: Volume bars spacing đều nhờ date axis
-- **Font**: `tickfont=dict(size=10)`, `ticks="outside"`
+- **Type**: `type='date'` thay vì `category` - **ĐÃ SỬA**
+- **Format**: `tickformat='%b %Y'` (ví dụ: Jul 2025) - **ĐÃ SỬA**
+- **Spacing**: Volume bars spacing đều nhờ date axis - **ĐÃ SỬA**
+- **Font**: `tickfont=dict(size=10)` - **ĐÃ SỬA**
 
 ### 📊 **Data Formatting**
 - **Giá**: `tickformat=',.0f'` - Không hiển thị phần thập phân
