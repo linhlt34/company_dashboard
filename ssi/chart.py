@@ -69,6 +69,13 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
         subplot_titles=[f"{symbol} Price Chart", "Volume"]
     )
 
+    # Tạo hover text thủ công cho candlestick
+    hover_text = [
+        f"<b>{d.strftime('%Y-%m-%d')}</b><br>"
+        f"Open: {o:,.0f}<br>High: {h:,.0f}<br>Low: {l:,.0f}<br>Close: {c:,.0f}"
+        for d, o, h, l, c in zip(df_temp['tradingDate'], df_temp['open'], df_temp['high'], df_temp['low'], df_temp['close'])
+    ]
+
     # Candlestick chart
     fig.add_trace(
         go.Candlestick(
@@ -80,7 +87,9 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
             name='OHLC',
             opacity=0.8,
             increasing_line_color='#26A69A',
-            decreasing_line_color='#EF5350'
+            decreasing_line_color='#EF5350',
+            hoverinfo='text',
+            hovertext=hover_text
         ), row=1, col=1
     )
     
