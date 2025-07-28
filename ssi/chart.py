@@ -102,9 +102,9 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
             name='MA(20)',
             line=dict(color='#FF9800', width=2),
             opacity=0.8,
-            hoverinfo='x+y',
-            hovertemplate='<b>%{x|%Y-%m-%d}</b><br>' +
-                         'MA(20): %{y:,.0f}<extra></extra>'
+            hoverinfo='text',
+            hovertext=[f"<b>{d.strftime('%Y-%m-%d')}</b><br>MA(20): {y:,.0f}" 
+                      for d, y in zip(df_temp['tradingDate'], df_temp['MA20'])]
         ), row=1, col=1
     )
     
@@ -117,9 +117,9 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
             name='MA(50)',
             line=dict(color='#2196F3', width=2),
             opacity=0.8,
-            hoverinfo='x+y',
-            hovertemplate='<b>%{x|%Y-%m-%d}</b><br>' +
-                         'MA(50): %{y:,.0f}<extra></extra>'
+            hoverinfo='text',
+            hovertext=[f"<b>{d.strftime('%Y-%m-%d')}</b><br>MA(50): {y:,.0f}" 
+                      for d, y in zip(df_temp['tradingDate'], df_temp['MA50'])]
         ), row=1, col=1
     )
     
@@ -133,9 +133,9 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
             marker_color=colors,
             name='Volume',
             opacity=0.6,
-            hoverinfo='x+y',
-            hovertemplate='<b>%{x|%Y-%m-%d}</b><br>' +
-                         'Volume: %{y:.2f}M<extra></extra>'
+            hoverinfo='text',
+            hovertext=[f"<b>{d.strftime('%Y-%m-%d')}</b><br>Volume: {v:.2f}M" 
+                      for d, v in zip(df_temp['tradingDate'], volume_m)]
         ), row=2, col=1
     )
     
