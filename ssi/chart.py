@@ -78,7 +78,12 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
             name='OHLC',
             opacity=0.8,
             increasing_line_color='#26A69A',
-            decreasing_line_color='#EF5350'
+            decreasing_line_color='#EF5350',
+            hovertemplate='<b>%{x}</b><br>' +
+                         'Open: %{open:,.0f}<br>' +
+                         'High: %{high:,.0f}<br>' +
+                         'Low: %{low:,.0f}<br>' +
+                         'Close: %{close:,.0f}<extra></extra>'
         ), row=1, col=1
     )
     
@@ -90,7 +95,9 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
             mode='lines',
             name='MA(20)',
             line=dict(color='#FF9800', width=2),
-            opacity=0.8
+            opacity=0.8,
+            hovertemplate='<b>%{x}</b><br>' +
+                         'MA(20): %{y:,.0f}<extra></extra>'
         ), row=1, col=1
     )
     
@@ -102,19 +109,24 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
             mode='lines',
             name='MA(50)',
             line=dict(color='#2196F3', width=2),
-            opacity=0.8
+            opacity=0.8,
+            hovertemplate='<b>%{x}</b><br>' +
+                         'MA(50): %{y:,.0f}<extra></extra>'
         ), row=1, col=1
     )
     
-    # Volume bars with color coding
+    # Volume bars with color coding (convert to millions)
     colors = ['#26A69A' if c >= o else '#EF5350' for c, o in zip(df_temp['close'], df_temp['open'])]
+    volume_m = df_temp['volume'] / 1_000_000  # Convert to millions
     fig.add_trace(
         go.Bar(
             x=df_temp['tradingDate'],
-            y=df_temp['volume'],
+            y=volume_m,
             marker_color=colors,
             name='Volume',
-            opacity=0.6
+            opacity=0.6,
+            hovertemplate='<b>%{x}</b><br>' +
+                         'Volume: %{y:.2f}M<extra></extra>'
         ), row=2, col=1
     )
     
@@ -132,29 +144,29 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
         yaxis2_title="Volume",
         xaxis_rangeslider_visible=False,  
         xaxis2_rangeslider_visible=False,
-        height=700,
-        width=1200,
+        autosize=True,
+        height=600,
         showlegend=True,
+        hovermode='x unified',  # Bật crosshair
         legend=dict(
             orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
             x=1,
-            bgcolor='rgba(255,255,255,0.8)',
-            bordercolor='rgba(0,0,0,0.1)',
-            borderwidth=1
+            y=1.05,
+            xanchor="right",
+            yanchor="bottom",
+            bgcolor='rgba(255,255,255,0)',  # không cần nền
+            borderwidth=0
         ),
         margin=dict(l=50, r=50, t=80, b=50),
         plot_bgcolor='white',
         paper_bgcolor='white'
     )
     
-    # Update axes
+    # Update axes with lighter grid
     fig.update_xaxes(
         showgrid=True,
         gridwidth=1,
-        gridcolor='rgba(0,0,0,0.1)',
+        gridcolor='rgba(0,0,0,0.05)',  # Lighter grid
         type='category',
         tickangle=45
     )
@@ -162,17 +174,21 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
     fig.update_yaxes(
         showgrid=True,
         gridwidth=1,
-        gridcolor='rgba(0,0,0,0.1)',
-        zeroline=False
+        gridcolor='rgba(0,0,0,0.05)',  # Lighter grid
+        zeroline=False,
+        tickformat=',.0f'  # Không hiển thị phần thập phân
     )
     
     # Update y-axis for volume
     fig.update_yaxes(
         showgrid=True,
         gridwidth=1,
-        gridcolor='rgba(0,0,0,0.1)',
+        gridcolor='rgba(0,0,0,0.05)',  # Lighter grid
         zeroline=False,
-        row=2, col=1
+        row=2, col=1,
+        tickformat='.2f',
+        tickprefix='',
+        ticksuffix='M'
     )
 
     return fig
