@@ -134,7 +134,7 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
         autosize=True,
         height=600,
         showlegend=True,
-        hovermode='x unified',
+        # hovermode='x unified',  # Bỏ để tránh xung đột
         legend=dict(
             orientation="h",
             x=1,
@@ -177,8 +177,7 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
         ticksuffix='M'
     )
 
-    # Enable crosshair for all traces
-    fig.update_traces(hoverinfo='x+y')
+    # Bỏ fig.update_traces để tránh ghi đè hovertemplate
     
     # Force hide all vertical grids - cách mạnh hơn
     for axis in fig.layout:
