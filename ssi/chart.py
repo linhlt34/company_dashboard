@@ -192,8 +192,10 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
         ticksuffix='M'
     )
 
-    # Enable crosshair for all traces
-    fig.update_traces(hoverinfo='x+y')
+    # Chỉ cập nhật hoverinfo cho Scatter và Bar (Volume), không cho Candlestick
+    for trace in fig.data:
+        if isinstance(trace, (go.Scatter, go.Bar)):
+            trace.update(hoverinfo='x+y')
     
     # Force hide all vertical grids - cách mạnh hơn
     for axis in fig.layout:
