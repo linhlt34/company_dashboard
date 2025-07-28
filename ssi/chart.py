@@ -195,6 +195,26 @@ def create_ohlcv_candlestick(df: pd.DataFrame, symbol: str, start_date: str = '2
     for axis in fig.layout:
         if axis.startswith("xaxis"):
             fig.layout[axis].update(showgrid=False)
+    
+    # Giải pháp mạnh cuối cùng: dùng fig.layout.update(...)
+    fig.layout.update({
+        'xaxis': dict(
+            showgrid=False,
+            tickformat='%b %Y',
+            tickangle=0,
+            tickfont=dict(size=10)
+        ),
+        'xaxis2': dict(
+            showgrid=False,
+            tickformat='%b %Y',
+            tickangle=0,
+            tickfont=dict(size=10)
+        )
+    })
+    
+    # Debug: kiểm tra layout config
+    print("Final layout config:")
+    print(fig.layout.to_plotly_json())
 
     return fig
 

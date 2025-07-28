@@ -42,6 +42,14 @@ def load_ticker_price(ticker: str, start_date: str = None) -> 'plotly.graph_obje
     # Create chart
     try:
         fig = create_ohlcv_candlestick(df, ticker, start_date)
+        
+        # Debug: kiểm tra layout config trước khi return
+        print(f"Debug - Chart created for {ticker}:")
+        print(f"xaxis showgrid: {fig.layout.xaxis.showgrid}")
+        print(f"xaxis tickformat: {fig.layout.xaxis.tickformat}")
+        print(f"xaxis2 showgrid: {fig.layout.xaxis2.showgrid}")
+        print(f"xaxis2 tickformat: {fig.layout.xaxis2.tickformat}")
+        
         return fig
     except Exception as e:
         st.error(f"Error creating chart for {ticker}: {str(e)}")
